@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import APIRouter, HTTPException
 import json
 from pydantic import BaseModel
 
@@ -9,7 +9,7 @@ class User(BaseModel):
   fullname: str
   address: str
 
-app = FastAPI()
+router = APIRouter()
 
 # Establish userData dir
 userData = 'data/user.json'
@@ -17,11 +17,11 @@ userData = 'data/user.json'
 with open(userData, 'r') as read_file:
   data = json.load(read_file)
 
-@app.get('/user')
+@router.get('/user')
 async def read_all_user():
 	return data['user']
 
-@app.get('/user/{id}')
+@router.get('/user/{id}')
 async def read_user(id: int):
   for user_item in data['user']:
     if user_item['id'] == id:
@@ -30,7 +30,7 @@ async def read_user(id: int):
     status_code=404, detail=f'User not found'
   )
 
-@app.post('/user')
+@router.post('/user')
 async def add_user(item: Item):
 	item_dict = item.dict()
 	item_found = False
@@ -49,7 +49,7 @@ async def add_user(item: Item):
 		status_code=404, detail=f'User not found'
 	)
 
-@app.delete('/user/{id}')
+@router.delete('/user/{id}')
 async def delete_user(user_id: int):
 
 	item_found = False

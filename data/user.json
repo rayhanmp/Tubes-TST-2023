@@ -5,36 +5,35 @@
       "fullname": "Princess Leia",
       "address": "Jl. Sulanjana No. 5, Bandung Wetan, Kota Bandung, 40116"
     },
-    [ {"id": 2,
+    {"id": 2,
       "username": "solo007",
       "password": "whoAreYou",
       "fullname": "Han Solo",
       "address": "Jl. Riau No. 3, Jatiwaringin, Kota Bekasi, 20116"
     },
-    [ {"id": 3,
+    {"id": 3,
       "username": "jemes22bon",
       "password": "notAnAgent700",
       "fullname": "Jemes Bon Wijaya",
       "address": "Jl. Sangkuriang No. 9, Coblong, Kota Bandung, 40331"
     },
-    [ {"id": 4,
+    {"id": 4,
       "username": "tomkrus1",
       "password": "pizzaMushy3",
       "fullname": "Tom Krus Suprapto",
       "address": "Jl. Margonda No. 22, Kota Depok, 60582"
     },
-    [ {"id": 5,
+    {"id": 5,
       "username": "uncleGokil99",
       "password": "simplePassOK33",
       "fullname": "Gokilia Suhendra",
       "address": "Jl. Sulanjana No. 24, Bandung Wetan, Kota Bandung, 40113"
     },
-    [ {"id": 6,
+    {"id": 6,
       "username": "dowiwiSiput99",
       "password": "guessMyPass72",
       "fullname": "Dowiwi Siputra Jr.",
       "address": "Jl. Jatimakmur No. 75, Jatimakmur, Kota Bekasi, 16158"
     }
-    ]
-
+  ]
 }

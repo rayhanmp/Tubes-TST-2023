@@ -1,0 +1,38 @@
+{
+    "user_id": 1,
+    "items": [
+      {
+        "id": 1,
+        "name": "Table",
+        "type": "Dining Table",
+        "color": "Black",
+        "height": 30,
+        "width": 60,
+        "depth": 36,
+        "weight": 50,
+        "surface_area": 2160,
+        "volume": 64800,
+        "baseprice": 300000,
+        "extras": [
+          {"id": 1, "name": "Cup holder", "price": 50000},
+          {"id": 2, "name": "USB-C Charging Port", "price": 100000}
+        ]
+      },
+      {
+        "id": 2,
+        "name": "Chair",
+        "type": "Dining Chair",
+        "color": "White",
+        "height": 40,
+        "width": 20,
+        "depth": 18,
+        "weight": 10,
+        "surface_area": 360,
+        "volume": 7200,
+        "baseprice": 500000,
+        "extras": []
+      }
+    ],
+    "total_price": 1000000
+  }
+  

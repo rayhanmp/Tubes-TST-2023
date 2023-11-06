@@ -1,0 +1,9 @@
+{"model":
+[
+    {"id": 1,
+    "filename": "table.gltf" },
+    {"id": 2,
+    "filename": "chair.gltf" },    
+    {"id": 3,
+    "filename": "sofa.gltf" }   
+]}
