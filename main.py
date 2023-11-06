@@ -12,3 +12,7 @@ app.include_router(component_router, prefix='/component')
 app.include_router(furniture_router, prefix='/furniture')
 app.include_router(cart_router, prefix='/cart')
 app.include_router(model_router, prefix='/model')
+
+@app.get('/')
+async def welcome():
+    return {"message": "Hello there!"}

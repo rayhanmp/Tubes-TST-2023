@@ -40,7 +40,7 @@ async def read_furniture(id: int):
   )
 
 @router.post('/furniture')
-async def add_furniture(item: Item):
+async def add_furniture(item: Furniture):
 	item_dict = item.dict()
 	item_found = False
 	for furniture_item in data['furniture']:

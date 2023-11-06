@@ -31,7 +31,7 @@ async def read_user(id: int):
   )
 
 @router.post('/user')
-async def add_user(item: Item):
+async def add_user(item: User):
 	item_dict = item.dict()
 	item_found = False
 	for user_item in data['user']:
@@ -53,12 +53,12 @@ async def add_user(item: Item):
 async def delete_user(user_id: int):
 
 	item_found = False
-	for menu_idx, menu_item in enumerate(data['user']):
+	for user_idx, menu_item in enumerate(data['user']):
 		if menu_item['id'] == user_id:
 			item_found = True
 			data['user'].pop(user_idx)
 			
-			with open(json_filename,"w") as write_file:
+			with open(userData,"w") as write_file:
 				json.dump(data, write_file)
 			return "Data successfully updated."
 	
