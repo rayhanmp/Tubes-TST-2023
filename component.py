@@ -16,7 +16,7 @@ componentData = 'data/component.json'
 with open(componentData, 'r') as read_file:
   data = json.load(read_file)
 
-@router.get('/component')
+@router.get('/')
 async def read_all_component():
 	return data['component']
 
@@ -29,7 +29,7 @@ async def read_component(id: int):
     status_code=404, detail=f'component not found'
   )
 
-@router.post('/component')
+@router.post('/')
 async def add_component(item: Component):
 	item_dict = item.dict()
 	item_found = False
@@ -48,21 +48,19 @@ async def add_component(item: Component):
 		status_code=404, detail=f'User not found'
 	)
 
-@router.delete('/component/{id}')
+@router.delete('/{component_id}')
 async def delete_component(component_id: int):
+    item_found = False
+    for component_idx, component_item in enumerate(data['component']):
+        if component_item['id'] == component_id:
+            item_found = True
+            data['component'].pop(component_idx)
 
-	item_found = False
-	for component_idx, component_item in enumerate(data['component']):
-		if component_item['id'] == id:
-			item_found = True
-			data['component'].pop(component_idx)
-			
-			with open(componentData,"w") as write_file:
-				json.dump(data, write_file)
-			return "Data successfully updated."
-	
-	if not item_found:
-		return "component ID not found."
-	raise HTTPException(
-		status_code=404, detail=f'component not found'
-	)
+            with open(componentData,"w") as write_file:
+                json.dump(data, write_file)
+            return "Data successfully updated."
+
+    if not item_found:
+        raise HTTPException(
+            status_code=404, detail=f'Component ID not found.'
+        )

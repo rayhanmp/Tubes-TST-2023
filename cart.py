@@ -3,6 +3,7 @@ import json
 from pydantic import BaseModel
 from typing import List
 from furniture import Furniture
+import requests
 
 class Cart(BaseModel):
   user_id: int
@@ -17,56 +18,60 @@ cartData = 'data/cart.json'
 with open(cartData, 'r') as read_file:
   data = json.load(read_file)
 
-@router.get('/cart')
+@router.get('/')
 async def read_all_cart():
 	return data['cart']
 
-@router.get('/cart/{id}')
-async def read_cart(id: int):
+@router.get('/{user_id}')
+async def read_cart(user_id: int):
   for cart_item in data['cart']:
-    if cart_item['user_id'] == id:
+    if cart_item['user_id'] == user_id:
       return cart_item
   raise HTTPException(
     status_code=404, detail=f'Cart not found'
   )
 
-@router.post('/cart')
-async def add_cart(item: Furniture):
+@router.post('/')
+async def add_item_to_cart(user_id: int, item: Furniture):
     item_dict = item.dict()
-    item_found = False
-    for cart_item in data['cart']:
-        for existing_item in cart_item['items']:
-            if existing_item['id'] == item_dict['id']:
-                item_found = True
-                break
 
-    if not item_found:
-        data['cart'][0]['items'].append(item_dict)
-        data['cart'][0]['total_price'] += item_dict['baseprice']
+    total_price = item_dict['baseprice']
+    for component in item_dict['extras']:
+        total_price += component['price']
+     
+    for cart in data['cart']:
+        if cart['user_id'] == user_id:
+            for existing_item in cart['items']:
+                if existing_item['id'] == item_dict['id']:
+                    return "Furniture item with the same ID already exists in the cart"
+            
+            cart['items'].append(item_dict)
+            cart['total_price'] += total_price
 
-    with open(cartData, "w") as write_file:
-        json.dump(data, write_file)
+            with open(cartData, "w") as write_file:
+                json.dump(data, write_file)
 
-    return item_dict
+            return "Furniture has been added to the cart."
 
-@router.delete('/cart/{user_id}/{furniture_id}')
+    return "User not found"
+
+
+@router.delete('/{user_id}/{furniture_id}')
 async def delete_cart_item(user_id: int, furniture_id: int):
-    cart_item_found = False
-    cart_item = data['cart']
-
-    if cart_item['user_id'] == user_id:
-        for item in cart_item['items']:
-            if item['id'] == furniture_id:
-                cart_item_found = True
-                cart_item['items'].remove(item)
-                cart_item['total_price'] -= item['baseprice']
-                break
-
-    if cart_item_found:
-        with open(cartData, "w") as write_file:
-            json.dump(data, write_file)
-        return f"Furniture item with ID {furniture_id} removed from the cart."
-    else:
-        raise HTTPException(
-            status_code=404, detail=f'User or furniture not found'
-        )
+    for cart in data['cart']:
+        if cart['user_id'] == user_id:
+            for item in cart['items']:
+                if item['id'] == furniture_id:
+                    total_price = item['baseprice']
+                    for component in item['extras']:
+                        total_price += component['price']
+                        
+                    cart['items'].remove(item)
+                    cart['total_price'] -= total_price
+                    
+                    with open(cartData, "w") as write_file:
+                        json.dump(data, write_file)
+                    
+                    return f"Furniture item has been removed from the cart"
+    
+    return "User or furniture item not found"

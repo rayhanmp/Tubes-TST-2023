@@ -17,11 +17,11 @@ userData = 'data/user.json'
 with open(userData, 'r') as read_file:
   data = json.load(read_file)
 
-@router.get('/user')
+@router.get('/')
 async def read_all_user():
 	return data['user']
 
-@router.get('/user/{id}')
+@router.get('/{id}')
 async def read_user(id: int):
   for user_item in data['user']:
     if user_item['id'] == id:
@@ -30,7 +30,7 @@ async def read_user(id: int):
     status_code=404, detail=f'User not found'
   )
 
-@router.post('/user')
+@router.post('/')
 async def add_user(item: User):
 	item_dict = item.dict()
 	item_found = False
@@ -43,13 +43,13 @@ async def add_user(item: User):
 		data['user'].append(item_dict)
 		with open(userData,"w") as write_file:
 			json.dump(data, write_file)
-
-		return item_dict
+		return data['user']
+	
 	raise HTTPException(
 		status_code=404, detail=f'User not found'
 	)
 
-@router.delete('/user/{id}')
+@router.delete('/{id}')
 async def delete_user(user_id: int):
 
 	item_found = False

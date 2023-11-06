@@ -26,11 +26,11 @@ furnitureData = 'data/furniture.json'
 with open(furnitureData, 'r') as read_file:
   data = json.load(read_file)
 
-@router.get('/furniture')
+@router.get('/')
 async def read_all_furniture():
 	return data['furniture']
 
-@router.get('/furniture/{id}')
+@router.get('/{id}')
 async def read_furniture(id: int):
   for furniture_item in data['furniture']:
     if furniture_item['id'] == id:
@@ -39,7 +39,7 @@ async def read_furniture(id: int):
     status_code=404, detail=f'Furniture not found'
   )
 
-@router.post('/furniture')
+@router.post('/')
 async def add_furniture(item: Furniture):
 	item_dict = item.dict()
 	item_found = False
@@ -58,21 +58,19 @@ async def add_furniture(item: Furniture):
 		status_code=404, detail=f'User not found'
 	)
 
-@router.delete('/furniture/{id}')
+@router.delete('/{furniture_id}')
 async def delete_furniture(furniture_id: int):
+    item_found = False
+    for furniture_idx, furniture_item in enumerate(data['furniture']):
+        if furniture_item['id'] == furniture_id:
+            item_found = True
+            data['furniture'].pop(furniture_idx)
 
-	item_found = False
-	for furniture_idx, furniture_item in enumerate(data['furniture']):
-		if furniture_item['id'] == id:
-			item_found = True
-			data['furniture'].pop(furniture_idx)
-			
-			with open(furnitureData,"w") as write_file:
-				json.dump(data, write_file)
-			return "Data successfully updated."
-	
-	if not item_found:
-		return "Furniture ID not found."
-	raise HTTPException(
-		status_code=404, detail=f'Furniture not found'
-	)
+            with open(furnitureData,"w") as write_file:
+                json.dump(data, write_file)
+            return "Data successfully updated."
+
+    if not item_found:
+        raise HTTPException(
+            status_code=404, detail=f'Furniture ID not found.'
+        )

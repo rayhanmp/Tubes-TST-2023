@@ -1,15 +1,21 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import FileResponse
 import json
+from pydantic import BaseModel
+
+class Model(BaseModel):
+    id: int
+    filename: str
 
 router = APIRouter()
 
 modelData = 'data/model.json'
 
+
 with open(modelData, "r") as read_file:
     data = json.load(read_file)
 
-@router.get("/model/{furniture_id}")
+@router.get("/{furniture_id}")
 async def get_model(furniture_id: int):
     file = [item for item in data['model'] if item["id"] == furniture_id]
     if file:
