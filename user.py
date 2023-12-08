@@ -37,6 +37,7 @@ def auth_user(username: str, password_hashed: str):
 	return None
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
+
 async def get_current_user(token: str = Depends(oauth2_scheme)):
     try:
         payload = jwt.decode(token, JWT_Secret, algorithms=[JWT_Algorithm])
@@ -51,7 +52,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         )
 
 @router.get('/')
-async def read_all_user():
+async def read_all_user(token: str = Depends(oauth2_scheme)):
 	return data['user']
 
 @router.get('/me')
@@ -59,7 +60,7 @@ async def get_user(user: UserStored = Depends(get_current_user)):
 	return user
 
 @router.get('/{id}')
-async def read_user(id: int):
+async def read_user(id: int, token: str = Depends(oauth2_scheme)):
   for user_item in data['user']:
     if user_item['id'] == id:
       return user_item
@@ -92,7 +93,7 @@ async def add_user(item: User):
 	)
 
 @router.delete('/{id}')
-async def delete_user(user_id: int):
+async def delete_user(user_id: int, token: str = Depends(oauth2_scheme)):
 
 	item_found = False
 	for user_idx, menu_item in enumerate(data['user']):

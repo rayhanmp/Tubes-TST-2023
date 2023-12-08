@@ -5,8 +5,17 @@ from furniture import router as furniture_router
 from cart import router as cart_router
 from model import router as model_router
 from auth import router as auth_router
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(user_router, prefix='/user')
 app.include_router(component_router, prefix='/component')

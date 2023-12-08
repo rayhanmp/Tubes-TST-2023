@@ -1,15 +1,1 @@
-{ "component":
-    [ {"id": 1,
-       "name": "Cup holder",
-       "price": 50000
-    },
-    {"id": 2,
-        "name": "USB-C Charging Port",
-        "price": 100000
-    
-    },
-    {"id":3,
-        "name": "Extra shelves",
-        "price": "150000"}
-    ]
-}
+{"component": [{"id": 1, "name": "Cup holder", "price": 50000}, {"id": 2, "name": "USB-C Charging Port", "price": 100000}, {"id": 3, "name": "Extra shelves", "price": "150000"}, {"id": 0, "name": "string", "price": 0}]}

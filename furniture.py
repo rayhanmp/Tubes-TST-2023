@@ -1,8 +1,9 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 import json
 from pydantic import BaseModel
 from typing import List
 from component import Component
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 class Furniture(BaseModel):
   id: int
@@ -26,12 +27,14 @@ furnitureData = 'data/furniture.json'
 with open(furnitureData, 'r') as read_file:
   data = json.load(read_file)
 
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
+
 @router.get('/')
-async def read_all_furniture():
+async def read_all_furniture(token: str = Depends(oauth2_scheme)):
 	return data['furniture']
 
 @router.get('/{id}')
-async def read_furniture(id: int):
+async def read_furniture(id: int, token: str = Depends(oauth2_scheme)):
   for furniture_item in data['furniture']:
     if furniture_item['id'] == id:
       return furniture_item
@@ -40,7 +43,7 @@ async def read_furniture(id: int):
   )
 
 @router.post('/')
-async def add_furniture(item: Furniture):
+async def add_furniture(item: Furniture, token: str = Depends(oauth2_scheme)):
 	item_dict = item.dict()
 	item_found = False
 	for furniture_item in data['furniture']:
@@ -59,7 +62,7 @@ async def add_furniture(item: Furniture):
 	)
 
 @router.delete('/{furniture_id}')
-async def delete_furniture(furniture_id: int):
+async def delete_furniture(furniture_id: int, token: str = Depends(oauth2_scheme)):
     item_found = False
     for furniture_idx, furniture_item in enumerate(data['furniture']):
         if furniture_item['id'] == furniture_id:

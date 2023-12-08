@@ -1,9 +1,10 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 import json
 from pydantic import BaseModel
 from typing import List
 from furniture import Furniture
 import requests
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 class Cart(BaseModel):
   user_id: int
@@ -17,13 +18,13 @@ cartData = 'data/cart.json'
 
 with open(cartData, 'r') as read_file:
   data = json.load(read_file)
-
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
 @router.get('/')
-async def read_all_cart():
+async def read_all_cart(token: str = Depends(oauth2_scheme)):
 	return data['cart']
 
 @router.get('/{user_id}')
-async def read_cart(user_id: int):
+async def read_cart(user_id: int, token: str = Depends(oauth2_scheme)):
   for cart_item in data['cart']:
     if cart_item['user_id'] == user_id:
       return cart_item
@@ -32,7 +33,7 @@ async def read_cart(user_id: int):
   )
 
 @router.post('/')
-async def add_item_to_cart(user_id: int, item: Furniture):
+async def add_item_to_cart(user_id: int, item: Furniture, token: str = Depends(oauth2_scheme)):
     item_dict = item.dict()
 
     total_price = item_dict['baseprice']
@@ -57,7 +58,7 @@ async def add_item_to_cart(user_id: int, item: Furniture):
 
 
 @router.delete('/{user_id}/{furniture_id}')
-async def delete_cart_item(user_id: int, furniture_id: int):
+async def delete_cart_item(user_id: int, furniture_id: int, token: str = Depends(oauth2_scheme)):
     for cart in data['cart']:
         if cart['user_id'] == user_id:
             for item in cart['items']:
